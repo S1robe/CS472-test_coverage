@@ -61,7 +61,7 @@ class TestAccountModel(TestCase):
 
     def test_to_dict(self):
         """ Test account to dict """
-        data = ACCOUNT_DATA[self.rand] # get a random account
+        data = ACCOUNT_DATA[self.rand]  # get a random account
         account = Account(**data)
         result = account.to_dict()
         self.assertEqual(account.name, result["name"])
@@ -72,7 +72,7 @@ class TestAccountModel(TestCase):
 
     def test_from_dict(self):
         """Test account from dict """
-        data = ACCOUNT_DATA[self.rand] # get a random account
+        data = ACCOUNT_DATA[self.rand]  # get a random account
         account = Account(**data)
         result = account.to_dict()
         resultAccount = Account()
@@ -93,25 +93,23 @@ class TestAccountModel(TestCase):
         account = Account.query.get(randnum)
         oldname = account.name
         # Get the same account twice
-        result = Account.query.get(randnum) 
+        result = Account.query.get(randnum)
 
         # Modify some fields
         result.disabled = not account.disabled
         result.name = "Test" + account.name
         newName = result.name
         result.id = randnum
-        
         # Committ the changes
         result.update()
         # Reload the account
         result = Account.query.get(randnum)
-        
         # Check for changes.
         self.assertEqual(result.name, newName)
         self.assertEqual(result.name, account.name)
         self.assertNotEqual(oldname, newName)
         self.assertEqual(account.disabled, result.disabled)
-   
+
     def test_update_fail(self):
         """Test account update DataValidationError"""
         account = Account(**ACCOUNT_DATA[self.rand])
@@ -128,10 +126,9 @@ class TestAccountModel(TestCase):
         randnum = self.rand
         account = Account.query.get(randnum)
         account.delete()
-        print(Account.query.get(randnum))
-        print(account)
+        self.assertIsNone(Account.query.get(randnum))
 
-    def test_find(self):
+    def test_find_valid(self):
         """Test find account"""
         for data in ACCOUNT_DATA:
             account = Account(**data)
@@ -140,7 +137,7 @@ class TestAccountModel(TestCase):
         randNum = self.rand
         account = Account.find(randNum)
         result = ACCOUNT_DATA[(randNum-1)]
-
+        
         self.assertEqual(account.name, result["name"])
         self.assertEqual(account.email, result["email"])
         self.assertEqual(account.phone_number, result["phone_number"])
